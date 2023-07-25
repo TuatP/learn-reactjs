@@ -10,7 +10,7 @@ const Nav = ({ setSearch, setCartVisibility, productsInCart }) => {
   </Link>
   <button
     className="navbar-toggler"
-    type="button"
+    type="button" 
     data-toggle="collapse"
     data-target="#navbarNav"
     aria-controls="navbarNav"
