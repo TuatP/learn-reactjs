@@ -1,0 +1,59 @@
+.carousel {
+    background-image: url(../images/home_slider.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 680px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel__content {
+    text-align: center;
+    color: white;
+}
+
+.carousel__content p {
+    font-family: "Oswald", sans-serif;
+    font-size: 20px;
+    color: rgb(219, 45, 97);
+    font-weight: bold;
+}
+
+.carousel__content h1 {
+    font-weight: bold;
+    font-size: 75px;
+    line-height: 90px;
+}
+
+.carousel__content button {
+    font-size: 16px;
+    margin-top: 10px;
+    padding: 15px 25px;
+    background-color: red;
+    color: white;
+    border: 1px solid red;
+    cursor: pointer;
+    transition: all 2s;
+}
+
+.carousel__content button:hover {
+    background-color: #5622af;
+}
+
+.carousel__content .down {
+    margin-top: 30px;
+    font-size: 30px;
+    animation: arrowDown 1s linear 0s infinite;
+}
+
+@keyframes arrowDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+}
