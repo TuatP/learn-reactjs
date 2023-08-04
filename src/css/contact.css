@@ -20,7 +20,7 @@
 	padding-left: 5px;
 	color: #828282;
 }
-.form-control{
+.form-control .id{
 	border: none; /*1px solid #f4f4f4;*/
 	border-radius: 20px;
 	background: rgba(165, 147, 69, 0.075);/*#f4f4f4;*/

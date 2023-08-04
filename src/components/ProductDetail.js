@@ -1,10 +1,30 @@
-import React from 'react'
-import "../css/detailProduct.css"
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';import "../css/detailProduct.css"
 import { useParams } from 'react-router-dom'
 
-const ProductDetail = ({ products, addProductToCart }) => {
+
+const ProductDetail = ({ addProductToCart }) => {
+
+
     const { id } = useParams();
-  
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        // Gọi API từ server khi component được mount
+        fetchProducts();
+    }, []);
+
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get("http://localhost:8080/api/products/list");
+            const data = response.data
+            setProducts(data)
+            console.log(data)
+        } catch (error) {
+            console.log('Lỗi khi lấy danh sách categories:', error);
+        }
+    }
+
     // Tìm sản phẩm theo ID trong danh sách sản phẩm
     const product = products.find((item) => item.id === parseInt(id));
   
@@ -21,7 +41,7 @@ const ProductDetail = ({ products, addProductToCart }) => {
       <div className="preview col-md-6">
         <div className="preview-pic tab-content">
           <div className="tab-pane active" id="pic-1">
-            <img src={product.image} alt='' width={100} height={500}/>
+            <img src={`http://localhost:8080/api/products/get-image/${product.imageName}`} alt='' width={100} height={500}/>
           </div>
         </div>
       </div>
@@ -62,7 +82,7 @@ const ProductDetail = ({ products, addProductToCart }) => {
           <span className="color green" />
           <span className="color blue" />
         </h5>
-        <div className="action">
+        <div className="action" style={{marginLeft: '250px', marginBottom: '250px'}}>
           <button className="add-to-cart btn btn-default" type="button" onClick={()=> 
 									addProductToCart(product)}>
             add to cart

@@ -1,18 +1,24 @@
 import './App.css';
-import React, {useState, useEffect} from 'react';
-import "./css/main.css"
+import React, { useState, useEffect } from 'react';
 import ShoppingCart from './components/ShoppingCart';
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Router } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Footer from './components/Footer'
-import Nav from './components/Nav'
 import Home from './components/Home';
-
 import ProductDetail from './components/ProductDetail';
 import Contact from './components/Contact';
 import About from './components/About';
+import AddCategory from './admin/components/categories/AddCategory';
+import ListCategory from './admin/components/categories/ListCategory';
+
+import HomeAdmin from './admin/HomeAdmin';
+import HomeUser from './user/HomeUser';
+import AddProduct from './admin/components/products/AddProduct';
+import ListProduct from './admin/components/products/ListProduct';
+import Register from './components/Register';
+import Login from './components/Login';
 
 
+export const ProductContext = React.createContext();
 
 //create products 
 const products = [
@@ -71,7 +77,7 @@ const products = [
 		image: "https://m.media-amazon.com/images/I/61U6oC65TTL._AC_UF894,1000_QL80_.jpg",
 		used: "8K SUPER STEADY VIDEO: Shoot videos that rival how epic your life is with stunning 8K recording, the highest recording resolution available on a smartphone; Video captured is effortlessly smooth, thanks to Auto Focus Video Stabilization on Galaxy S22 Ultra.Form_factor : Smartphone"
 	},
-    {
+	{
 		id: 7,
 		name: "SAMSUNG Galaxy J7 Prime",
 		description:
@@ -79,7 +85,7 @@ const products = [
 		price: 100,
 		image: "https://images.samsung.com/is/image/samsung/sg-feature-galaxy-j7-prime-g610-172648710?$FB_TYPE_B_JPG$",
 		used: "8K SUPER STEADY VIDEO: Shoot videos that rival how epic your life is with stunning 8K recording, the highest recording resolution available on a smartphone; Video captured is effortlessly smooth, thanks to Auto Focus Video Stabilization on Galaxy S22 Ultra.Form_factor : Smartphone"
-	},	
+	},
 	{
 		id: 8,
 		name: "Oppo F21 Pro 5G",
@@ -88,7 +94,7 @@ const products = [
 		price: 590,
 		image: "https://m.media-amazon.com/images/I/71XcMiRMC1L.jpg",
 		used: 'Apple Trade In makes it easy to get credit towards the purchase of your next iPhone. Simply answer a few questions about your device. Based on what you tell us, we’ll provide an estimated trade-in value. If you pay monthly, we’ll apply the value as instant credit to lower the monthly payments of your new iPhone. If you pay in full, we’ll credit your payment method after we receive your trade-in. If it’s not eligible for credit, you can recycle it for free.'
-	},	
+	},
 	{
 		id: 9,
 		name: "Oppo Reno5",
@@ -97,34 +103,42 @@ const products = [
 		price: 499,
 		image: "https://cdn.tgdd.vn/Products/Images/42/220438/oppo-reno5-trang-600x600-1-600x600.jpg",
 		used: 'Apple Trade In makes it easy to get credit towards the purchase of your next iPhone. Simply answer a few questions about your device. Based on what you tell us, we’ll provide an estimated trade-in value. If you pay monthly, we’ll apply the value as instant credit to lower the monthly payments of your new iPhone. If you pay in full, we’ll credit your payment method after we receive your trade-in. If it’s not eligible for credit, you can recycle it for free.'
-	},
+	}, {
+		id: 10,
+		name: "Oppo 2",
+		description:
+			"Android 11, upgradable to Android 12, ColorOS 12 Octa-core (1x2.4 GHz Kryo 475 Prime & 1x2.2 GHz Kryo 475 Gold & 6x1.8 GHz Kryo 475 Silver)",
+		price: 4900,
+		image: "https://cdn.tgdd.vn/Products/Images/42/220438/oppo-reno5-trang-600x600-1-600x600.jpg",
+		used: 'Apple Trade In makes it easy to get credit towards the purchase of your next iPhone. Simply answer a few questions about your device. Based on what you tell us, we’ll provide an estimated trade-in value. If you pay monthly, we’ll apply the value as instant credit to lower the monthly payments of your new iPhone. If you pay in full, we’ll credit your payment method after we receive your trade-in. If it’s not eligible for credit, you can recycle it for free.'
+	}
 ];
 
 function App() {
-  const [search, setSearch] = useState('')
-  console.log(search)
-  const [cartsVisibilty, setcartsVisibilty] = useState(false)
-  const [productsInCart, setproductsInCart] = 
-  useState((JSON.parse(
-	localStorage.getItem('shopping-cart')
-	    )
-      ) || []
-    );
+	const [search, setSearch] = useState('')
+	console.log(search)
+	const [cartsVisibilty, setcartsVisibilty] = useState(false)
+	const [productsInCart, setproductsInCart] =
+		useState((JSON.parse(
+			localStorage.getItem('shopping-cart')
+		)
+		) || []
+		);
 
-	useEffect(()=>{
+	useEffect(() => {
 		localStorage.setItem('shopping-cart', JSON.stringify(productsInCart))
-	},[productsInCart])
+	}, [productsInCart])
 
-	
+
 	const addProductToCart = (prod) => {
 		const oldCart = [...productsInCart];
 		const findItem = oldCart.find((item) => {
-			return item.product.id === prod.id; 
+			return item.product.id === prod.id;
 		});
 
-		if(findItem){
-			findItem.count +=1;
-		}else{
+		if (findItem) {
+			findItem.count += 1;
+		} else {
 			const cartItem = {
 				product: prod,
 				count: 1,
@@ -134,53 +148,68 @@ function App() {
 		setproductsInCart(oldCart);
 	}
 
-  //remove Product
-  const onProductRemove = (product) => {
-	setproductsInCart((oldState) => {
-		const productsIndex = oldState.findIndex((item) => item.id === product.id);
-		if (productsIndex !== -1){
-			oldState.splice(productsIndex, 1)
+	//remove Product
+	const onProductRemove = (product) => {
+		setproductsInCart((oldState) => {
+			const productsIndex = oldState.findIndex((item) => item.id === product.id);
+			if (productsIndex !== -1) {
+				oldState.splice(productsIndex, 1)
+			}
+			return [...oldState];
+		})
+	}
+
+
+	const onQuantityChange = (prod, change) => {
+		const oldCart = [...productsInCart];
+		const index = oldCart.findIndex((item) => item === prod);
+
+		if (change) {
+			oldCart[index].count += 1;
+		} else if (oldCart[index].count > 1) {
+			oldCart[index].count -= 1;
+		} else if (oldCart[index].count === 1) {
+			alert('Quantity product min is 1')
 		}
-		return [...oldState];
-	})
-  }
+		setproductsInCart(oldCart);
+	}
 
-  
-const onQuantityChange = (prod, change) => {
-	const oldCart = [...productsInCart];
-    const index = oldCart.findIndex((item) => item === prod);
+	const contextValue = {
+		setSearch, setcartsVisibilty, productsInCart
+	}
 
-    if (change) {
-		oldCart[index].count += 1;
-    } else if (oldCart[index].count > 1) {
-		oldCart[index].count -= 1;
-    } else if (oldCart[index].count === 1) {
-		alert('Quantity product min is 1')
-    }
-	setproductsInCart(oldCart);
-}
-
-  //
-  return (
-    <div className="App">
-      <ShoppingCart 
-          visibilty={cartsVisibilty}
-        //   products={productsInCart}
-		  onClose={()=>setcartsVisibilty(false)}
-		  onQuantityChange={onQuantityChange}
-		  onProductRemove={onProductRemove}
-		  productsInCart={productsInCart}
-      />
-		<Nav setSearch={setSearch} setCartVisibility={setcartsVisibilty} productsInCart={productsInCart}/>
+	//
+	return (
+		<ProductContext.Provider value={contextValue}>
+		<div className="App">
+			<ShoppingCart
+				visibilty={cartsVisibilty}
+				onClose={() => setcartsVisibilty(false)}
+				onQuantityChange={onQuantityChange}
+				onProductRemove={onProductRemove}
+				productsInCart={productsInCart}
+			/>
 			<Routes>
-			<Route path="/products/:id" element={<ProductDetail products={products} addProductToCart={addProductToCart} />} />
-			<Route path="/" element={<Home products={products} search={search} addProductToCart={addProductToCart} />} />
-			<Route path="/contact" element={<Contact/>}/>
-			<Route path="/about" element={<About/>}/>
+				<Route path='/admin' element={<HomeAdmin />}>
+					<Route index path='category/add' element={< AddCategory />} />
+					<Route path='category/list' element={< ListCategory />} />
+					<Route path='product/add' element={< AddProduct />} />
+					<Route path='product/list' element={< ListProduct />} />
+					<Route path='category/:id' element={< AddCategory />} />
+
+				</Route>
+				<Route path='/user' element={<HomeUser />}>
+				    <Route path="register" element={<Register />} />
+					<Route path="login" element={<Login />} />
+					<Route path='contact' element={<Contact />} />
+					<Route path="about" element={<About />} />
+					<Route path="products" element={<Home products={products} search={search} addProductToCart={addProductToCart} />} />
+					<Route path="products/:id" element={<ProductDetail products={products} addProductToCart={addProductToCart} />} />
+				</Route>
 			</Routes>
-				<Footer />
-    </div>
-  );
+		</div>
+		</ProductContext.Provider>
+	);
 }
 
 export default App;

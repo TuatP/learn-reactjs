@@ -22,20 +22,20 @@ export default function Contact() {
       <form>
         <div className="form-group pt-2 pl-1">
           <label htmlFor="exampleInputName">Your name</label>
-          <input type="text" className="form-control" id="exampleInputName" />
+          <input type="text" className="form-control id" id="exampleInputName" />
         </div>
         <div className="form-group pl-1">
           <label htmlFor="exampleInputEmail1">Your email address</label>
           <input
             type="email"
-            className="form-control"
+            className="form-control id"
             id="exampleInputEmail1"
           />
         </div>
         <div className="form-group pl-1">
           <label htmlFor="exampleFormControlTextarea1">Your message</label>
           <textarea
-            className="form-control"
+            className="form-control id"
             id="exampleFormControlTextarea1"
             rows={5}
             defaultValue={""}
