@@ -27,6 +27,7 @@ export default function Home( {search, addProductToCart}) {
   return (
     <>
       <main className='prod'>
+
 				<h2 className="title">
 					Products
 				</h2>
@@ -52,9 +53,13 @@ export default function Home( {search, addProductToCart}) {
 									`${product.information.slice(0,150)} ...` 
 								}
 							</p>
+							<h4>
 							<span className="product-price" style={{textAlign: 'center'}}>
-								{product.price}$
+							{product.price - (product.price * (product.discount/100))}$ 
 							</span>
+							</h4>
+							
+							
 							<div className="buttons">
 								<Link className="btn" to={`/user/products/${product.id}`}>Detail</Link>
 								<button

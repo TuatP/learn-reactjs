@@ -6,6 +6,8 @@ import { ProductContext } from '../App';
 
 const Nav = () => {
   const {setSearch, setcartsVisibilty, productsInCart} = useContext(ProductContext);
+
+
     return (
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
   <Link className="navbar-brand" to={"/"}>
@@ -39,7 +41,6 @@ const Nav = () => {
           Contact
         </Link>
       </li>
-      
     </ul>
     <div className="form-inline">
     <input placeholder='Search...' onChange={(e) => setSearch(e.target.value)} />

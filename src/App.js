@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import ShoppingCart from './components/ShoppingCart';
-import { Routes, Route, Router } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './components/Home';
 import ProductDetail from './components/ProductDetail';
@@ -16,6 +16,7 @@ import AddProduct from './admin/components/products/AddProduct';
 import ListProduct from './admin/components/products/ListProduct';
 import Register from './components/Register';
 import Login from './components/Login';
+import Checkout from './components/Checkout';
 
 
 export const ProductContext = React.createContext();
@@ -203,6 +204,7 @@ function App() {
 					<Route path="login" element={<Login />} />
 					<Route path='contact' element={<Contact />} />
 					<Route path="about" element={<About />} />
+					<Route path="checkout" element={<Checkout productsInCart={productsInCart} />} />
 					<Route path="products" element={<Home products={products} search={search} addProductToCart={addProductToCart} />} />
 					<Route path="products/:id" element={<ProductDetail products={products} addProductToCart={addProductToCart} />} />
 				</Route>

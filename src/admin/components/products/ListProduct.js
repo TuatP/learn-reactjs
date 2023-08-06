@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function ListProduct() {
     const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
         // Gọi API từ server khi component được mount
@@ -32,24 +33,22 @@ export default function ListProduct() {
     }
     return (
         <div>
-            <section class="row">
+            <section className="row">
                 <div class="col mt-4">
-                    <div class="card" style={{marginLeft: "280px"}}>
+                    <div className="card" style={{ marginLeft: "280px", height: "1200px" }}>
                         <div class="card-header">
                             <h2>List of Products</h2>
                         </div>
-                        <div class="card-body">
+                        <div className="card-body">
 
-                            <div class="row mt-2 mb-2">
-                                <div class="col">
+                            <div className="row mt-2 mb-2">
+                                <div className="col">
                                     <form >
-                                        <div class="form-inline float-left">
-                                            <label for="name">Name:</label>
-                                            <input type="text" class="form-control ml-2" name="name" id="name" aria-describedby="helpId" placeholder="Name" />
-                                            <button class="btn btn-outline-primary">Search</button>
+                                        <div className="form-inline float-left">
+                                            <input type="text" className="form-control ml-2" onChange={(e) => setSearch(e.target.value)} name="name" id="name" aria-describedby="helpId" placeholder="Search by name" />
                                         </div>
                                     </form>
-                                    <div class="float-right">
+                                    <div className="float-right">
                                         <Link className="btn btn-primary" to="/admin/product/add">
                                             Add new Product
                                         </Link>                                    </div>
@@ -64,32 +63,38 @@ export default function ListProduct() {
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Unit Price</th>
-                                        <th>Information</th>
+                                        <th>Quantity</th>
+                                        <th>Discount</th>
+
                                         <th>Category</th>
                                         <th></th>
                                     </tr>
 
                                 </thead>
                                 <tbody>
-                                    {products.map((product) => {
-                                        return (
+                                    {products.filter((product) => {
+                                        return search.toLowerCase() === ''
+                                            ? product
+                                            : product.name.toLowerCase().includes(search)
+                                    })
+                                        .map((product) => {
+                                            return (
 
-                                            <tr key={product.id}>
-                                                <td><input type="checkbox" name="" id="" class="form-check-inline" /></td>
-                                                <td><img src={`http://localhost:8080/api/products/get-image/${product.imageName}`} id="image" width="70" class="img-fluid" alt="" />{product.imageFile}</td>
-                                                <td>{product.name}</td>
-                                                <td>{product.price}</td>
-                                                <td>{product.information}</td>
-                                                <td>{product.category ? product.category.name : 'N/A'}</td>
-                                                <td>
-                                                    <a onClick={() => deleteProduct(product.id)} class="btn btn-outline-info">Delete<i class="fas fa-info"></i></a>
-                                                    <a class="btn btn-outline-warning"><i class="fas fa-edit"></i></a>
-                                                    <a class="btn btn-outline-danger"><i class="fas fa-recycle"></i></a>
-                                                </td>
+                                                <tr key={product.id}>
+                                                    <td><input type="checkbox" name="" id="" class="form-check-inline" /></td>
+                                                    <td><img src={`http://localhost:8080/api/products/get-image/${product.imageName}`} id="image" height="10" width="70" class="img-fluid" alt="" />{product.imageFile}</td>
+                                                    <td>{product.name}</td>
+                                                    <td>{product.price}</td>
+                                                    <td>{product.quantity}</td>
+                                                    <td>{product.discount}</td>
+                                                    <td>{product.category ? product.category.name : 'N/A'}</td>
+                                                    <td>
+                                                        <a onClick={() => deleteProduct(product.id)} class="btn btn-outline-danger" href='##'>Delete<i class="fas fa-info"></i></a>
+                                                    </td>
 
-                                            </tr>
-                                        )
-                                    })}
+                                                </tr>
+                                            )
+                                        })}
 
                                 </tbody>
                             </table>

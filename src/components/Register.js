@@ -1,4 +1,7 @@
 import React, { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom';
+import {FaFacebook, FaGoogle, FaTwitter} from "react-icons/fa"
+
 import axios from 'axios';
 import "../css/register.css"
 
@@ -19,7 +22,7 @@ export default function Register() {
         setCustomer({ ...customer, [name]: value });
     };
 
-
+    const navigate = useNavigate();
 
     const handleAddSubmit = async (e) => {
         try {
@@ -35,6 +38,7 @@ export default function Register() {
                 "http://localhost:8080/api/customers",
                 formData
             );
+            navigate('/user/login'); 
             console.log("Register success: " + reponse.data);
 
         } catch (error) {
@@ -133,17 +137,17 @@ export default function Register() {
                     <ul className="p-0 social-links">
                         <li>
                             <a href="#">
-                                <span className="fab fa-facebook-f" />
+                                <FaFacebook size={25} />
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <span className="fab fa-google" />
+                            <FaGoogle size={25} />
                             </a>
                         </li>
                         <li>
                             <a href="#">
-                                <span className="fab fa-github" />
+                            <FaTwitter size={25} />
                             </a>
                         </li>
                     </ul>

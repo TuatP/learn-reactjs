@@ -1,6 +1,8 @@
 import React from 'react'
 import "../css/shoppingCart.css"
 import {FaTimes} from "react-icons/fa"
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -16,13 +18,14 @@ function ShoppingCart({
     const totalPrice = productsInCart.reduce(function(total, prod){
         return total + prod.product.price * prod.count;
     },0)
+    console.log(productsInCart);
   return (
     
     <div className='modal' style={{display: visibilty ? "block" : "none"}}>
         <div className='shoppingCart'>
         <div className='header'>
             <h2>Shopping Cart</h2>
-            <button className='btn close-btn' onClick={onClose}>
+            <button className='btn close-btn' onClick={onClose} style={{marginLeft: '600px'}}>
             <FaTimes size={30}/>
             </button>
         </div>
@@ -30,7 +33,7 @@ function ShoppingCart({
             {productsInCart.length === 0 &&( <span className='empty-text'>Your basket is currenlty empty</span>)}
             {productsInCart.map(item=>(
                 <div className='cart-product' key={item.product.id}>
-                    <img src={item.product.image}
+                    <img src={`http://localhost:8080/api/products/get-image/${item.product.imageName}`}
                          alt={item.product.name} />
                          <div className='product-info'>
                             <h3>{item.product.name}</h3>
@@ -58,9 +61,9 @@ function ShoppingCart({
             ))}
             <span className='totalAmount'>Total amount: {totalPrice} $</span>
             {productsInCart.length > 0 &&
-             (<button className='btn checkout-btn'>
+             (<Link className='btn checkout-btn' to={'/user/checkout'}  onClick={onClose} style={{fontWeight: 'bold', fontSize: '18px', color: 'red'}}>
                 Proceed to checkout
-             </button>)}
+             </Link>)}
         </div>
         </div>
         
