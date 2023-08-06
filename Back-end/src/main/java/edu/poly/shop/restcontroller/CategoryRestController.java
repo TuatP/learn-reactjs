@@ -32,7 +32,6 @@ public class CategoryRestController {
 	public ResponseEntity<Category> addCategory(@RequestBody Category category) {
 		categoryDAO.save(category);
 		return ResponseEntity.ok(category);
-
 	}
 
 	@GetMapping("/list")

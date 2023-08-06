@@ -42,7 +42,6 @@ public class ProductRestController {
 	
 	@PostMapping("")
 	public ResponseEntity<Product> addProduct(@ModelAttribute Product product, @RequestParam("imageFile") MultipartFile imageFile) {
-			productDAO.save(product);
 		
 		try {
 	        // Lưu thông tin sản phẩm vào cơ sở dữ liệu
