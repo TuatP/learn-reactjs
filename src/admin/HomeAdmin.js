@@ -1,7 +1,6 @@
 import React from 'react'
 import Footer from '../components/Footer'
 import { Outlet, Route, Routes } from 'react-router-dom'
-import AddCategory from './components/categories/AddCategory'
 import Nav from './components/Nav'
 
 function HomeAdmin() {

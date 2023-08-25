@@ -12,6 +12,6 @@
 }
 
 
-.form-inline{
-	display: list-item;
+.nav-link > span:hover{
+	color: rgb(117, 199, 199);
 }

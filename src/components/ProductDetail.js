@@ -35,7 +35,7 @@ const ProductDetail = ({ addProductToCart }) => {
 
   return (
     <>
-      <div className="card">
+      <div className="card" style={{marginTop: '50px', height: '800px', padding: '3em'}}>
         <div className="container-fliud">
           <div className="wrapper row">
             <div className="preview col-md-6">

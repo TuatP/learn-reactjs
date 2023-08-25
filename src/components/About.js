@@ -17,7 +17,7 @@ export default function About() {
       <br />
       DESIGN AGENCY{" "}
     </h1>
-    <Link to={"/"}><button>READ MORE</button></Link>
+    <Link to={"/user/products"}><button>READ MORE</button></Link>
     <div className="carousel__scroll">
       <FaArrowCircleDown size={20} className='down'/>
     </div>

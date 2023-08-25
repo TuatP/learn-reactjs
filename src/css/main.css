@@ -32,15 +32,11 @@
 }
 
 .form-inline{
-	margin-left: 950px;
+	display: flex;
+	margin-left: 580px;
 }
 
-/* .btn {
-	border: none;
-	outline: none;
-	background: transparent;
-	cursor: pointer;
-} */
+
 
 .shopping-cart-btn {
 	color: #fff;

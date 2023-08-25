@@ -10,7 +10,12 @@
 }
 
 
-
+  
+.errorMsg {
+    max-width: 100%;
+    font-size:0.80rem;
+    color:rgb(168, 43, 43);
+  }
 .wrapperr {
     max-width: 450px;
     margin: 50px auto;

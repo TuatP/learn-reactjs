@@ -17,6 +17,12 @@ import ListProduct from './admin/components/products/ListProduct';
 import Register from './components/Register';
 import Login from './components/Login';
 import Checkout from './components/Checkout';
+import PurchaseOrder from './components/PurchaseOrder';
+import Order from './admin/components/orders/Order';
+import ConfirmOrder from './admin/components/orders/ConfirmOrder';
+import StatusPurchase from './components/StatusPurchase';
+import TopUser from './admin/components/statistical/TopUser';
+import Profile from './components/Profile';
 
 
 export const ProductContext = React.createContext();
@@ -130,7 +136,8 @@ function App() {
 		localStorage.setItem('shopping-cart', JSON.stringify(productsInCart))
 	}, [productsInCart])
 
-
+	const userToken = localStorage.getItem("key");
+	 
 	const addProductToCart = (prod) => {
 		const oldCart = [...productsInCart];
 		const findItem = oldCart.find((item) => {
@@ -151,13 +158,12 @@ function App() {
 
 	//remove Product
 	const onProductRemove = (product) => {
-		setproductsInCart((oldState) => {
-			const productsIndex = oldState.findIndex((item) => item.id === product.id);
-			if (productsIndex !== -1) {
-				oldState.splice(productsIndex, 1)
-			}
-			return [...oldState];
-		})
+		const oldState = [...productsInCart];
+		const productsIndex = oldState.findIndex((item) => item.id === product.id);
+		if (productsIndex !== -1) {
+			oldState.splice(productsIndex, 1)
+		}
+		setproductsInCart(oldState)
 	}
 
 
@@ -172,6 +178,10 @@ function App() {
 		} else if (oldCart[index].count === 1) {
 			alert('Quantity product min is 1')
 		}
+		if (oldCart[index].count >= prod.product.quantity) {
+			oldCart[index].count = prod.product.quantity;
+		}
+		
 		setproductsInCart(oldCart);
 	}
 
@@ -194,17 +204,23 @@ function App() {
 				<Route path='/admin' element={<HomeAdmin />}>
 					<Route index path='category/add' element={< AddCategory />} />
 					<Route path='category/list' element={< ListCategory />} />
+					<Route path='category/:id' element={< AddCategory />} />
 					<Route path='product/add' element={< AddProduct />} />
 					<Route path='product/list' element={< ListProduct />} />
-					<Route path='category/:id' element={< AddCategory />} />
-
+					<Route path='product/:id' element={< AddProduct />} />
+					<Route path='order' element={< Order />} />
+					<Route path='confirm-order' element={< ConfirmOrder />} />
+					<Route path='report/top-user' element={< TopUser />} />
 				</Route>
 				<Route path='/user' element={<HomeUser />}>
 				    <Route path="register" element={<Register />} />
 					<Route path="login" element={<Login />} />
+					<Route path="profile" element={<Profile />} />
 					<Route path='contact' element={<Contact />} />
 					<Route path="about" element={<About />} />
-					<Route path="checkout" element={<Checkout productsInCart={productsInCart} />} />
+					<Route path="purchase" element={<PurchaseOrder />} />
+					<Route path="purchase/status" element={<StatusPurchase />} />
+					<Route path="checkout" element={<Checkout productsInCart={productsInCart} setproductsInCart={setproductsInCart}/>} />
 					<Route path="products" element={<Home products={products} search={search} addProductToCart={addProductToCart} />} />
 					<Route path="products/:id" element={<ProductDetail products={products} addProductToCart={addProductToCart} />} />
 				</Route>

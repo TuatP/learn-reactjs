@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from 'react'
+import {  useNavigate } from 'react-router-dom';
+
 import "../css/checkout.css"
 import styles from '../css/checkout.module.css'
 import { format } from 'date-fns';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 
 
 
-export default function Checkout({ productsInCart }) {
+
+export default function Checkout({ productsInCart, setproductsInCart }) {
 
 
 
     const [address, setAddress] = useState('');
     const [username, setUsername] = useState('');
-    // console.log(storedData)
+    const navigate = useNavigate();
+
+    console.log("products",productsInCart)
 
     useEffect(() => {
         const storedData = localStorage.getItem("key");
@@ -21,9 +27,9 @@ export default function Checkout({ productsInCart }) {
       }, []);
 
 
-    const totalPrice = productsInCart.reduce(function(total, prod){
-        return total + prod.product.price * prod.count;
-    },0)
+      const totalPrice = productsInCart.reduce(function (total, prod) {
+        return total + (prod.product.price * prod.count) - ((prod.product.price * prod.count) * (prod.product.discount / 100));
+      }, 0) 
     const formattedDate = format(new Date(), 'dd-MM-yyyy');
 
     const handleSubmit = async (e) => {
@@ -34,23 +40,44 @@ export default function Checkout({ productsInCart }) {
             username: username,
             address: address
           });
-          console.log(orderResponse);
+          
           for (let productInCart of productsInCart) {
-             await axios.post('http://localhost:8080/api/orderDetails', {
-              price: productInCart.product.price,
-              quantity: productInCart.count,
-              product: productInCart.product,
+            const detailReponse = await axios.post('http://localhost:8080/api/orderDetails', {
               order: orderResponse.data,
+              price: productInCart.product.price,
+              product: productInCart.product,
+              quantity: productInCart.count
             });
+            console.log("detail: ",detailReponse);
           }
           
-          alert('Đơn đặt hàng đã được tạo thành công');
-          
+          Swal.fire(
+            'Successful order creation!',
+            'Success',
+            'success'
+          )
+          setproductsInCart([]);
+          navigate('/user/products');
         } catch (error) {
           // Xử lý và hiển thị thông báo lỗi cho người dùng
           console.log('Lỗi khi thêm đơn đặt hàng:', error);
           alert('Đã có lỗi xảy ra khi thêm đơn đặt hàng');
         }
+      };
+      //CHECKOUT VPN
+      const OnSubmitPay = async () => {
+        const dataPayment = {
+          amount: totalPrice,
+          vnpOrderInfo: "information",
+          vnpReturnUrl: "http://localhost:3000/",
+        };
+    
+        const responsePayment = await axios.post(
+          "http://localhost:8080/create-payment",
+          dataPayment
+        );
+        const linkPayment = await responsePayment.data;
+        window.location.href = linkPayment;
       };
 
     return (
@@ -72,7 +99,7 @@ export default function Checkout({ productsInCart }) {
                                 <h4 style={{ fontSize: '16px', color: '#7495aa', letterSpacing: '1px', lineHeight: '2' }}>{item.product.name}</h4>
                                 <h5 style={{ fontSize: '11px', fontWeight: '700', color: '#1d2429', letterSpacing: '1px', textTransform: 'uppercase' }}>
                                     <span style={{ marginLeft: '87px' }}>
-                                        {`${item.product.price}$  x  ${item.count}`} 
+                                        {`${item.product.price - (item.product.price * (item.product.discount/100))}$  x  ${item.count}`} 
                                     </span>
                                 </h5>
                             </li>
@@ -137,7 +164,7 @@ export default function Checkout({ productsInCart }) {
                             <h5 style={{ fontSize: '11px', fontWeight: '700', color: '#1d2429', letterSpacing: '1px', textTransform: 'uppercase' }}>Card Number</h5>
                             <h6 id="label-cardnumber">9987 1252 6658 7799</h6>
                             <h5 style={{ fontSize: '11px', fontWeight: '700', color: '#1d2429', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                                Expiration<span>CVC</span>
+                                Expiration<span style={{marginLeft: '70px'}}>CVC</span>
                             </h5>
                             <h6 id="label-cardexpiration">
                                 12 / 2020<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;798</span>
@@ -163,6 +190,9 @@ export default function Checkout({ productsInCart }) {
                     </div>
                     <button className="button-cta" title="Confirm your purchase" onClick={handleSubmit}>
                         <span>PURCHASE</span>
+                    </button>
+                    <button onClick={OnSubmitPay}>
+                        <span>VPN</span>
                     </button>
                 </div>
             </div>
